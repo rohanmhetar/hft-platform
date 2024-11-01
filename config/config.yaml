@@ -1,0 +1,39 @@
+# config/config.yaml
+
+data_acquisition:
+  provider: "polygon"
+  polygon:
+    websocket_uri: "wss://socket.polygon.io/stocks"  # WebSocket endpoint for stock data
+    api_key: "YOUR_POLYGON_API_KEY"  # Replace with your actual API key
+
+order_execution:
+  library_path: "./order_execution/cpp/liborder_executor.so"
+
+fix:
+  config_file: "./config/fix_config.cfg"
+
+predictive_modeling:
+  input_shape: [100, 5]
+  model_save_path: "./models/predictive_model.h5"
+
+logging:
+  version: 1
+  formatters:
+    standard:
+      format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  handlers:
+    console:
+      class: logging.StreamHandler
+      formatter: standard
+      level: INFO
+      stream: ext://sys.stdout
+    file:
+      class: logging.handlers.RotatingFileHandler
+      formatter: standard
+      level: DEBUG
+      filename: "hft_platform.log"
+      maxBytes: 10485760
+      backupCount: 5
+  root:
+    level: DEBUG
+    handlers: [console, file]

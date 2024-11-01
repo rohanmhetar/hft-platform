@@ -1,0 +1,106 @@
+# main.py
+
+import asyncio
+import yaml
+import pandas as pd
+import numpy as np
+import os
+from data_acquisition.data_stream import DataStream
+from data_acquisition.data_processor import DataProcessor
+from backtesting.backtester import Backtester
+from order_execution.python_bindings import OrderExecutor
+from predictive_modeling.model import PredictiveModel
+from predictive_modeling.trainer import Trainer
+from predictive_modeling.utils import normalize_data, create_sequences
+from fix_integration.fix_client import FixClient
+from utils.logger import get_logger
+
+logger = get_logger(__name__)
+
+def load_config(config_path: str = 'config/config.yaml') -> dict:
+    with open(config_path, 'r') as file:
+        return yaml.safe_load(file)
+
+async def main():
+    config = load_config()
+
+    # Initialize Data Processor
+    processor = DataProcessor(batch_size=1000)
+    
+    # Initialize Data Stream
+    data_stream = DataStream(provider=config['data_acquisition']['provider'],
+                             config=config['data_acquisition'],
+                             processor=processor)
+    data_stream.start()
+
+    # Start periodic data processing
+    asyncio.create_task(processor.run_periodic_processing())
+
+    # Initialize FIX Client
+    fix_client = FixClient(config['fix']['config_file'])
+    fix_client.start()
+
+    # Initialize Order Executor
+    order_executor = OrderExecutor(library_path=config['order_execution']['library_path'])
+
+    # Load historical data for backtesting
+    historical_data_path = 'data/historical_data.csv'
+    if not os.path.exists(historical_data_path):
+        logger.error(f"Historical data file not found at {historical_data_path}")
+        return
+    historical_data = pd.read_csv(historical_data_path, parse_dates=True, index_col='Date')
+    backtester = Backtester(data=historical_data)
+    strategy_params = {
+        'fast_period': 50,
+        'slow_period': 200,
+        'order_percentage': 0.95,
+        'ticker': 'AAPL'
+    }
+    backtester.setup(strategy_params=strategy_params)
+    backtester.run()
+
+    # Prepare data for predictive modeling
+    model_save_path = config['predictive_modeling']['model_save_path']
+    raw_data = processor.processed_data
+    if not raw_data:
+        logger.error("No processed data available for predictive modeling.")
+        return
+    data_array = np.concatenate(raw_data, axis=0)
+    normalized_data = normalize_data(data_array)
+    sequences = create_sequences(normalized_data, sequence_length=config['predictive_modeling']['input_shape'][0])
+    X = sequences[:, :-1, :]
+    y = sequences[:, -1, 1]  # Predicting the next price
+    model = PredictiveModel(input_shape=tuple(config['predictive_modeling']['input_shape']))
+    trainer = Trainer(model)
+    trainer.prepare_data(X, y)
+    trainer.train(epochs=100, batch_size=64)
+    trainer.save_model(model_save_path)
+
+    # Evaluate the model
+    evaluation = trainer.evaluate(X, y)
+    logger.info(f"Model Evaluation: {evaluation}")
+
+    # Example: Send a limit buy order via FIX
+    order_details = {
+        'ClOrdID': 'ORD123456',
+        'Symbol': 'AAPL',
+        'Side': '1',  # 1 = Buy
+        'OrdType': '2',  # 2 = Limit
+        'OrderQty': 100,
+        'Price': 150.00
+    }
+    fix_client.send_order(order_details)
+
+    # Example: Execute order via C++ executor
+    order_executor.execute_order("BUY AAPL 100 @ 150.00")
+
+    # Keep the main loop running to maintain connections
+    try:
+        while True:
+            await asyncio.sleep(1)
+    except KeyboardInterrupt:
+        logger.info("Shutting down HFT platform.")
+        fix_client.stop()
+
+if __name__ == "__main__":
+    asyncio.run(main())

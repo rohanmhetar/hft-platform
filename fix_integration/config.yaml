@@ -1,0 +1,19 @@
+# config/fix_config.cfg
+
+[DEFAULT]
+ConnectionType=initiator
+ReconnectInterval=60
+FileStorePath=./fix_store
+FileLogPath=./fix_logs
+StartTime=00:00:00
+EndTime=23:59:59
+UseDataDictionary=Y
+DataDictionary=FIX44.xml
+
+[SESSION]
+BeginString=FIX.4.4
+SenderCompID=YOUR_SENDER_ID
+TargetCompID=YOUR_TARGET_ID
+SocketConnectHost=127.0.0.1
+SocketConnectPort=5001
+HeartBtInt=30
