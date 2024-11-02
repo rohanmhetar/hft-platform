@@ -73,7 +73,7 @@ The platform has demonstrated remarkable financial performance, underpinned by r
 - **Annualized Return:** Averaging **25%**, significantly outperforming traditional investment benchmarks.
 - **Sharpe Ratio:** Achieving a Sharpe Ratio of **3.2**, indicating superior risk-adjusted returns.
 - **Win Rate:** Maintaining a win rate of **65%**, with profitable trades consistently outnumbering losses.
-- **Cumulative Profit:** Generated over **$2.5 million** in cumulative profits since deployment, showcasing the platform's ability to capitalize on market opportunities.
+- **Cumulative Profit:** Generated over **$25,000** in cumulative profits since deployment, showcasing the platform's ability to capitalize on market opportunities.
 
 ### Risk Management
 
