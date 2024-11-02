@@ -2,7 +2,7 @@
 
 ## Overview
 
-The **High-Frequency Trading (HFT) Platform** is a cutting-edge trading system designed to execute complex trading strategies with unmatched speed and precision. This platform seamlessly integrates real-time data acquisition, rigorous backtesting, multi-threaded order execution, advanced predictive modeling, and robust FIX protocol connectivity. Leveraging the strengths of both Python and C++, the platform ensures optimal performance, scalability, and adaptability to dynamic market conditions.
+My **High-Frequency Trading (HFT) Platform** is a trading system designed to execute complex trading strategies with unmatched speed and precision. This platform seamlessly integrates real-time data acquisition, rigorous backtesting, multi-threaded order execution, advanced predictive modeling, and robust FIX protocol connectivity. Leveraging the strengths of both Python and C++, the platform ensures optimal performance, scalability, and adaptability to dynamic market conditions.
 
 ---
 
