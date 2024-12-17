@@ -23,8 +23,6 @@ public:
 
     void execute_order(const std::string& order) {
         boost::asio::post(io_service_, [order]() {
-            // Simulate order execution latency
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
             std::cout << "Executed order: " << order << std::endl;
         });
     }
