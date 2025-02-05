@@ -6,14 +6,6 @@ My **High-Frequency Trading (HFT) Platform** is a trading system designed to exe
 
 ---
 
-## Journey & Motivation
-
-The inception of this HFT platform was driven by a profound passion for algorithmic trading and a relentless pursuit of technological excellence. Recognizing the transformative potential of combining Python's versatility with C++'s performance, the project embarked on a mission to create a system capable of processing massive volumes of market data in real-time, executing trades with minimal latency, and continuously learning from market patterns to enhance profitability.
-
-Throughout the development journey, numerous challenges were encountered—from minimizing latency and ensuring data integrity to implementing robust risk management protocols. Each obstacle was met with innovative solutions and meticulous optimization, culminating in a platform that not only meets but exceeds the demands of high-frequency trading environments. The successful deployment of this platform not only demonstrated technical prowess but also yielded substantial financial returns, underscoring the efficacy of data-driven trading strategies.
-
----
-
 ## Key Achievements
 
 - **Financial Performance:** Achieved consistent returns averaging **25% annualized ROI** over the past 12 months, demonstrating the platform's efficacy in generating substantial profits.
